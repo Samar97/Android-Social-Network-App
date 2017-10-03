@@ -1,0 +1,21 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.example.samarjeet.connect.HomeActivity">
+    <item
+        android:id="@+id/action_view_posts"
+        android:orderInCategory="100"
+        android:title="@string/action_view_post"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_add_post"
+        android:orderInCategory="100"
+        android:title="@string/action_add_post"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_search"
+        android:orderInCategory="100"
+        android:title="@string/action_search_user"
+        app:showAsAction="never" />
+
+</menu>

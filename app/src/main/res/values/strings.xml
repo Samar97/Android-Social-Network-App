@@ -1,0 +1,27 @@
+<resources>
+    <string name="app_name">Connect</string>
+
+    <!-- Strings related to login -->
+    <string name="prompt_userid">User ID</string>
+    <string name="prompt_password">Password</string>
+    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="error_invalid_email">This user id is invalid</string>
+    <string name="error_invalid_password">This password is too short</string>
+    <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="error_field_required">This field is required</string>
+    <string name="permission_rationale">"Contacts permissions are needed for providing user id
+        completions."
+    </string>
+    <string name="title_activity_welcome">Welcome</string>
+    <string name="title_activity_home">HomeActivity</string>
+    <string name="large_text">
+        "Material is the metaphor.\n\n"
+    </string>
+
+    <string name="action_view_post">View Posts</string>
+    <string name="action_search_user">Search Users</string>
+    <string name="action_add_post">Add Posts</string>
+    <string name="title_activity_add_post">AddPostActivity</string>
+    <string name="title_activity_search">SearchActivity</string>
+</resources>

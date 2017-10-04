@@ -21,8 +21,11 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.CookieHandler;
 import java.net.CookieManager;
+import java.net.HttpCookie;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.List;
+import java.util.Map;
 
 import static com.example.samarjeet.connect.Constants.http_url;
 import static com.example.samarjeet.connect.Constants.raiseAToast;
@@ -36,12 +39,17 @@ public class LoginActivity extends AppCompatActivity{
     Activity myactivity;
 
     BufferedWriter writer;
-    public static BufferedReader reader;
-    public static HttpURLConnection conn;
+    BufferedReader reader;
+    HttpURLConnection conn;
+
+    public static CookieManager cookieManager;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        cookieManager =new CookieManager();
+        CookieHandler.setDefault(cookieManager);
 
         myactivity = this;
         uid = (EditText) findViewById(R.id.uid);
@@ -74,12 +82,13 @@ public class LoginActivity extends AppCompatActivity{
             });
 
             try {
-                URL url = new URL(http_url);
+                URL url = new URL(http_url+"Login");
                 conn = (HttpURLConnection) url.openConnection();
 
                 conn.setRequestMethod("POST");
                 conn.setDoInput(true);
                 conn.setDoOutput(true);
+
 
                 OutputStream out = new BufferedOutputStream(conn.getOutputStream());
                 writer = new BufferedWriter(
@@ -90,7 +99,7 @@ public class LoginActivity extends AppCompatActivity{
                 writer.write(post);
                 writer.flush();
 
-                Log.d(TAG,"Posted: "+post);
+                Log.d(TAG,"Posted: "+post + "to url: "+url);
 
                 int responseCode=conn.getResponseCode();
 
@@ -116,8 +125,8 @@ public class LoginActivity extends AppCompatActivity{
                 String attr1 = jsonObject.getString("status");
                 if(attr1.equals("true")){
                     Log.d(TAG,"YAY Successful Login: "+ attr1);
-                    CookieManager cookieManager =new CookieManager();
-                    CookieHandler.setDefault(cookieManager);
+
+                    conn.disconnect();
                     Intent intent = new Intent(myactivity,HomeActivity.class);
                     startActivity(intent);
 

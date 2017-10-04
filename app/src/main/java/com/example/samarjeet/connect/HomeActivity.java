@@ -1,5 +1,6 @@
 package com.example.samarjeet.connect;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -12,9 +13,11 @@ import android.view.View;
 
 public class HomeActivity extends AppCompatActivity {
 
+    Activity hactivity;
+
     protected void getPosts(){
 
-        MakeRequest req = new MakeRequest("SeePosts");
+        MakeRequest req = new MakeRequest("SeePosts",hactivity);
         Thread reqthread = new Thread(req,"Making request: SeePosts");
         reqthread.start();
 
@@ -27,6 +30,7 @@ public class HomeActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        hactivity = this;
         getPosts();
     }
 

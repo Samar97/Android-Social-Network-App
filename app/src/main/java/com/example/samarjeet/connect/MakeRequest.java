@@ -38,8 +38,9 @@ public class MakeRequest implements Runnable{
     ListView lView = null;
     PostAdapter postAdapter;
 
-    public static List<User> userlist;
-    public static boolean done = false;
+    public List<User> userlist;
+    public boolean done = false;
+    public static boolean flag = false;
 
     public MakeRequest(String s, Activity a){
 
@@ -78,8 +79,164 @@ public class MakeRequest implements Runnable{
         else if (requestType.equals("CreatePost")) CreatePost();
         else if (requestType.equals("SearchUser")) SearchUser();
         else if (requestType.equals("NewComment")) NewComment();
+        else if(requestType.equals("Follow")) Follow();
+        else if(requestType.equals("Unfollow")) Unfollow();
 
         Log.d(TAG,"Request processed");
+    }
+
+    public void Follow(){
+        HttpURLConnection conn =  null;
+
+        try {
+            URL url = new URL(http_url+requestType);
+            conn = (HttpURLConnection) url.openConnection();
+
+            conn.setRequestMethod("POST");
+            conn.setDoInput(true);
+            conn.setDoOutput(true);
+
+            OutputStream out = new BufferedOutputStream(conn.getOutputStream());
+            BufferedWriter writer = new BufferedWriter(
+                    new OutputStreamWriter(out, "UTF-8"));
+
+            String post = "uid="+content;
+
+            writer.write(post);
+            writer.flush();
+
+            int responseCode=conn.getResponseCode();
+
+            Log.d(TAG,"Got response: " + responseCode);
+
+            String response = "";
+            if (responseCode == HttpURLConnection.HTTP_OK) {
+                String line;
+                BufferedReader reader=new BufferedReader(new InputStreamReader(conn.getInputStream()));
+
+                while ((line=reader.readLine()) != null) {
+                    response+=line;
+                }
+                Log.d(TAG,"Read: " + response);
+            }
+            else {
+                Log.d(TAG,"No response code");
+                response="";
+            }
+
+            JSONObject jsonObject = new JSONObject(response);
+
+            String attr1 = jsonObject.getString("status");
+
+            if(attr1.equals("true")){
+                Log.d(TAG,"YAY Successfully followed: "+content+"!");
+
+                mactivity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        raiseAToast(mactivity,"Successfully followed!");
+                    }});
+                done = true;
+                flag = true;
+                conn.disconnect();
+
+            }else{
+                Log.d(TAG,"Could not unfollow!");
+
+                mactivity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        raiseAToast(mactivity,"Not able to follow!");
+                    }});
+                done =true;
+                conn.disconnect();
+            }
+
+            Log.d(TAG,"Craxx");
+
+
+        }catch (Exception e){
+            done = true;
+            e.printStackTrace();
+            conn.disconnect();
+        }
+    }
+
+    public void Unfollow(){
+        HttpURLConnection conn =  null;
+
+        try {
+            URL url = new URL(http_url+requestType);
+            conn = (HttpURLConnection) url.openConnection();
+
+            conn.setRequestMethod("POST");
+            conn.setDoInput(true);
+            conn.setDoOutput(true);
+
+            OutputStream out = new BufferedOutputStream(conn.getOutputStream());
+            BufferedWriter writer = new BufferedWriter(
+                    new OutputStreamWriter(out, "UTF-8"));
+
+            String post = "uid="+content;
+
+            writer.write(post);
+            writer.flush();
+
+            int responseCode=conn.getResponseCode();
+
+            Log.d(TAG,"Got response: " + responseCode);
+
+            String response = "";
+            if (responseCode == HttpURLConnection.HTTP_OK) {
+                String line;
+                BufferedReader reader=new BufferedReader(new InputStreamReader(conn.getInputStream()));
+
+                while ((line=reader.readLine()) != null) {
+                    response+=line;
+                }
+                Log.d(TAG,"Read: " + response);
+            }
+            else {
+                Log.d(TAG,"No response code");
+                response="";
+            }
+
+            JSONObject jsonObject = new JSONObject(response);
+
+            String attr1 = jsonObject.getString("status");
+
+            if(attr1.equals("true")){
+                Log.d(TAG,"YAY Successfully unfollowed: "+content+"!");
+
+                mactivity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        raiseAToast(mactivity,"Successfully unfollowed!");
+                    }});
+                done = true;
+                flag = true;
+                conn.disconnect();
+
+            }else{
+                Log.d(TAG,"Could not unfollow!");
+
+                mactivity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        raiseAToast(mactivity,"Not able to unfollow!");
+                    }});
+                done = true;
+                conn.disconnect();
+            }
+
+            Log.d(TAG,"Craxx");
+
+
+        }catch (Exception e){
+            done = true;
+            e.printStackTrace();
+            conn.disconnect();
+        }
     }
 
     public void NewComment(){
@@ -221,7 +378,7 @@ public class MakeRequest implements Runnable{
                     for(int i=0; i<data.length(); i++){
                         JSONObject temp = data.getJSONObject(i);
 
-                        User tempuser = new User(temp.getString("name"),temp.getString("uid"),temp.getString("email"));
+                        User tempuser = new User(temp.getString("name"),temp.getString("uid"),temp.getString("email"),temp.getInt("follow"));
                         userlist.add(tempuser);
 
                     }
@@ -236,7 +393,7 @@ public class MakeRequest implements Runnable{
                     public void run() {
                         raiseAToast(mactivity,"Could not fetch userlist!");
                     }});
-
+                done = true;
                 conn.disconnect();
             }
 
@@ -244,6 +401,7 @@ public class MakeRequest implements Runnable{
 
 
         }catch (Exception e){
+            done = true;
             e.printStackTrace();
             conn.disconnect();
         }

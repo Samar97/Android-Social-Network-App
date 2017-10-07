@@ -9,10 +9,9 @@ import android.widget.Toast;
 
 public class Constants {
 
-    public static final String http_url = "http://192.168.0.101:8080/Connect/";
+    public static final String http_url = "http://192.168.43.152:8080/inlab_4/";
 
     public static void raiseAToast(Activity activity, String message){
         Toast.makeText(activity, message, Toast.LENGTH_SHORT).show();
     }
-
 }

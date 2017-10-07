@@ -2,6 +2,7 @@ package com.example.samarjeet.connect;
 
 import android.app.Activity;
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,11 +14,9 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.example.samarjeet.connect.MakeRequest.done;
-import static com.example.samarjeet.connect.MakeRequest.userlist;
-
 public class SearchUserAdapter extends BaseAdapter implements Filterable {
 
+    private static final String TAG="Search User Adapter";
     private static final int MAX_RESULTS = 10;
     private Context mContext;
     private Activity mactivity;
@@ -54,6 +53,7 @@ public class SearchUserAdapter extends BaseAdapter implements Filterable {
         ((TextView) convertView.findViewById(R.id.uname)).setText(getItem(position).getName());
         ((TextView) convertView.findViewById(R.id.uemail)).setText(getItem(position).getEmail());
         ((TextView) convertView.findViewById(R.id.uid)).setText(getItem(position).getid());
+
         return convertView;
     }
 
@@ -91,7 +91,8 @@ public class SearchUserAdapter extends BaseAdapter implements Filterable {
         Thread reqthread = new Thread(req,"Making request: CreatePosts");
         reqthread.start();
 
-        while(!done);
-        return userlist;
+        while(!req.done);
+        Log.d(TAG,"Returning: "+req.userlist.toString());
+        return req.userlist;
     }
 }

@@ -1,45 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <TextView
         android:id="@+id/list_item_pid"
-        android:layout_width="221dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="86dp"
+        android:layout_marginTop="64dp"
         android:text="TextView"
-        android:textAlignment="center"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
+        android:textAlignment="center" />
 
     <TextView
         android:id="@+id/list_item_ptext"
-        android:layout_width="222dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textSize="24sp"
+        android:textStyle="bold"
         android:textAlignment="center"
-        android:layout_alignStart="@+id/list_item_pid"
-        android:layout_below="@+id/list_item_pid"
-        android:layout_marginTop="83dp"
+        android:layout_marginTop="16dp"
         android:text="TextView" />
 
     <TextView
         android:id="@+id/list_item_ptimestamp"
-        android:layout_width="218dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textAlignment="center"
-        android:layout_alignStart="@+id/list_item_ptext"
-        android:layout_below="@+id/list_item_ptext"
-        android:layout_marginTop="71dp"
+        android:layout_marginTop="16dp"
         android:text="TextView" />
+
+    <TextView
+        android:id="@+id/list_item_add_comment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:layout_marginTop="16dp"
+        android:text="comment Here!" />
 
     <ListView
         android:id="@+id/comments_list"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="167dp"
+        android:layout_marginTop="64dp"
+        android:textAlignment="center" />
+
+    <TextView
+        android:id="@+id/view_more_comments"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textAlignment="center"
-        android:layout_below="@+id/list_item_ptimestamp"
-        android:layout_marginTop="64dp"
-        android:layout_alignParentEnd="true" />
+        android:text="View More Comments"
+        android:visibility="invisible"/>
+
 
 </LinearLayout>

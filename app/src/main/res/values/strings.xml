@@ -24,4 +24,6 @@
     <string name="action_add_post">Add Posts</string>
     <string name="title_activity_add_post">AddPostActivity</string>
     <string name="title_activity_search">SearchActivity</string>
+    <string name="title_activity_add_comment">AddCommentActivity</string>
+
 </resources>

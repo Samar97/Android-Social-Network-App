@@ -15,9 +15,11 @@ import java.util.ArrayList;
  */
 
 public class CommentsAdapter extends BaseAdapter implements ListAdapter {
-    private ArrayList<String> cnameList = new ArrayList<String>();
+    private ArrayList<String> cnameList = new ArrayList<>();
     private ArrayList<String> textList = new ArrayList<String>();
     private ArrayList<String> timestampList = new ArrayList<String>();
+    public boolean more = false;
+    private int commentCount = 3;
     private Context context;
 
     public static final String TAG = "Adapter";
@@ -31,6 +33,19 @@ public class CommentsAdapter extends BaseAdapter implements ListAdapter {
 
     @Override
     public int getCount() {
+        if(cnameList.size()<=commentCount){
+            return cnameList.size();
+        }
+
+        if(more){
+            return cnameList.size();
+        }else{
+            return commentCount;
+        }
+
+    }
+
+    public int getActualCount() {
         return cnameList.size();
     }
 

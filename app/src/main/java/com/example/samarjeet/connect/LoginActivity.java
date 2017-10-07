@@ -83,6 +83,7 @@ public class LoginActivity extends AppCompatActivity{
 
             try {
                 URL url = new URL(http_url+"Login");
+                Log.d(TAG,"Connecting to: " + url);
                 conn = (HttpURLConnection) url.openConnection();
 
                 conn.setRequestMethod("POST");

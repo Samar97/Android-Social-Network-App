@@ -25,6 +25,7 @@ import static com.example.samarjeet.connect.MakeRequest.flag;
 public class SearchActivity extends AppCompatActivity {
 
     Activity mactivity;
+    public static final String EXTRA_MESSAGE2 = "com.example.samarjeet.db_assign_trial.MSG";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -107,7 +108,9 @@ public class SearchActivity extends AppCompatActivity {
 
                     @Override
                     public void onClick(View view) {
-                        raiseAToast(mactivity,"To be implemented show posts");
+                        Intent intent = new Intent(mactivity, UserPostActivity.class);
+                        intent.putExtra(EXTRA_MESSAGE2,user.getid());
+                        mactivity.startActivity(intent);
                     }
                 });
             }

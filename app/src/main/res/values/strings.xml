@@ -25,5 +25,6 @@
     <string name="title_activity_add_post">AddPostActivity</string>
     <string name="title_activity_search">SearchActivity</string>
     <string name="title_activity_add_comment">AddCommentActivity</string>
+    <string name="title_activity_user_post">UserPostActivity</string>
 
 </resources>

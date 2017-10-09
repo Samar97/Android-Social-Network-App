@@ -24,6 +24,7 @@ public class PostAdapter extends BaseAdapter implements ListAdapter {
 
     private Context context;
     public static final String EXTRA_MESSAGE1 = "com.example.samarjeet.db_assign_trial.MESSAGE";
+    public static final String PREV_ACT = "com.example.samarjeet.db_assign_trial.ACT";
     public static final String TAG = "Adapter";
 
     public PostAdapter(ArrayList<String> lpidList, ArrayList<String> ltextList, ArrayList<String> ltimestampList,
@@ -76,6 +77,7 @@ public class PostAdapter extends BaseAdapter implements ListAdapter {
 
                     Intent intent = new Intent(context, AddCommentActivity.class);
                     intent.putExtra(EXTRA_MESSAGE1,pidList.get(position));
+                    intent.putExtra(PREV_ACT,context.getClass().getSimpleName());
                     context.startActivity(intent);
             }
         });
@@ -102,7 +104,7 @@ public class PostAdapter extends BaseAdapter implements ListAdapter {
         return view;
     }
 
-    public static void setListViewHeightBasedOnChildren(ListView listView) {
+    private static void setListViewHeightBasedOnChildren(ListView listView) {
         ListAdapter listAdapter = listView.getAdapter();
         if (listAdapter == null)
             return;

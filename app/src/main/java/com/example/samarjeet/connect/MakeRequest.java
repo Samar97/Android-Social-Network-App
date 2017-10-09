@@ -25,6 +25,7 @@ import java.util.List;
 
 import static com.example.samarjeet.connect.Constants.http_url;
 import static com.example.samarjeet.connect.Constants.raiseAToast;
+import static com.example.samarjeet.connect.UserPostActivity.lastuid;
 
 public class MakeRequest implements Runnable{
 
@@ -34,6 +35,7 @@ public class MakeRequest implements Runnable{
     Activity mactivity;
     String content;
     String cpostid;
+    String prevActivity;
 
     ListView lView = null;
     PostAdapter postAdapter;
@@ -60,12 +62,13 @@ public class MakeRequest implements Runnable{
 
     }
 
-    public MakeRequest(String s, String c, String p, Activity a){
+    public MakeRequest(String s, String c, String p, String an, Activity a){
 
         requestType = s;
         mactivity = a;
         content = c;
         cpostid = p;
+        prevActivity = an;
         Log.d(TAG,"Making a request for: "+ requestType);
 
     }
@@ -81,8 +84,118 @@ public class MakeRequest implements Runnable{
         else if (requestType.equals("NewComment")) NewComment();
         else if(requestType.equals("Follow")) Follow();
         else if(requestType.equals("Unfollow")) Unfollow();
+        else if (requestType.equals("SeeUserPosts")) SeeUserPosts();
 
         Log.d(TAG,"Request processed");
+    }
+
+    public void SeeUserPosts(){
+
+        HttpURLConnection conn =  null;
+
+        try {
+            URL url = new URL(http_url+requestType);
+            conn = (HttpURLConnection) url.openConnection();
+
+            conn.setRequestMethod("POST");
+            conn.setDoInput(true);
+            conn.setDoOutput(true);
+
+            OutputStream out = new BufferedOutputStream(conn.getOutputStream());
+            BufferedWriter writer = new BufferedWriter(
+                    new OutputStreamWriter(out, "UTF-8"));
+
+            String post = "uid="+content;
+
+            writer.write(post);
+            writer.flush();
+
+            int responseCode=conn.getResponseCode();
+
+            Log.d(TAG,"Got response: " + responseCode);
+
+            String response = "";
+            if (responseCode == HttpURLConnection.HTTP_OK) {
+                String line;
+                BufferedReader reader=new BufferedReader(new InputStreamReader(conn.getInputStream()));
+
+                while ((line=reader.readLine()) != null) {
+                    response+=line;
+                }
+                Log.d(TAG,"Read: " + response);
+            }
+            else {
+                Log.d(TAG,"No response code");
+                response="";
+            }
+
+            JSONObject jsonObject = new JSONObject(response);
+
+            String attr1 = jsonObject.getString("status");
+
+            if(attr1.equals("true")){
+                Log.d(TAG,"YAY Successful Receipt of Posts: "+ attr1);
+
+                ArrayList<String> pidList = new ArrayList<>(),textList = new ArrayList<>(),timestampList = new ArrayList<>();
+                ArrayList<CommentsAdapter> commentsAdapter = new ArrayList<>();
+
+
+                JSONArray data = new JSONArray(jsonObject.getString("data"));
+                if(data.length() != 0){
+
+                    for(int i=0; i<data.length(); i++){
+                        JSONObject temp = data.getJSONObject(i);
+                        pidList.add(temp.getString("postid"));
+                        textList.add(temp.getString("text"));
+                        timestampList.add(temp.getString("timestamp"));
+
+                        ArrayList<String> tcnameList = new ArrayList<>(), tctextList = new ArrayList<>(),tctimestampList = new ArrayList<>();
+
+                        JSONArray comments = new JSONArray(temp.getString("Comment"));
+
+                        if(comments.length() != 0){
+                            for(int j=0; j<comments.length(); j++){
+                                JSONObject ctemp = comments.getJSONObject(j);
+                                tcnameList.add(ctemp.getString("name"));
+                                tctextList.add(ctemp.getString("text"));
+                                tctimestampList.add(ctemp.getString("timestamp"));
+                            }
+                        }
+
+                        Log.d(TAG,"Comments list: "+tctextList.toString());
+
+                        CommentsAdapter tcommentsAdapter = new CommentsAdapter(tcnameList,tctextList,tctimestampList,mactivity);
+                        commentsAdapter.add(tcommentsAdapter);
+
+                    }
+                }
+
+
+                postAdapter = new PostAdapter(pidList,textList,timestampList,commentsAdapter,mactivity);
+
+                mactivity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        Log.d(TAG, "List Adapter : "+ postAdapter);
+                        lView = (ListView) mactivity.findViewById(R.id.uposts_list);
+                        lView.setAdapter(postAdapter);
+                    }});
+
+
+
+            }else{
+                Log.d(TAG,"Could not receive posts !");
+                conn.disconnect();
+            }
+
+            Log.d(TAG,"Craxx");
+
+
+        }catch (Exception e){
+            e.printStackTrace();
+            conn.disconnect();
+        }
     }
 
     public void Follow(){
@@ -290,8 +403,17 @@ public class MakeRequest implements Runnable{
                     public void run() {
                         raiseAToast(mactivity,"Successfully commented!");
                     }});
-                Intent intent = new Intent(mactivity,HomeActivity.class);
-                mactivity.startActivity(intent);
+                Log.d(TAG,"Prev activity name :"+prevActivity);
+                if(prevActivity.equals("HomeActivity")){
+                    Intent intent = new Intent(mactivity,HomeActivity.class);
+                    mactivity.startActivity(intent);
+                }
+                else{
+                    Intent intent = new Intent(mactivity,UserPostActivity.class);
+                    intent.putExtra(SearchActivity.EXTRA_MESSAGE2,lastuid);
+                    mactivity.startActivity(intent);
+                }
+
 
             }else{
                 Log.d(TAG,"Could not comment!");
@@ -313,7 +435,6 @@ public class MakeRequest implements Runnable{
             conn.disconnect();
         }
     }
-
 
     public void SearchUser(){
 

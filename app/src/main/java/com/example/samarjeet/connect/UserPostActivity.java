@@ -10,48 +10,37 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.TextView;
 
-import static com.example.samarjeet.connect.Constants.raiseAToast;
+public class UserPostActivity extends AppCompatActivity {
 
-public class AddCommentActivity extends AppCompatActivity {
+    public static String lastuid;
 
-    Activity mactivity;
+    Activity hactivity;
+
+    protected void getUserPosts(String uid){
+
+        MakeRequest req = new MakeRequest("SeeUserPosts",uid,hactivity);
+        Thread reqthread = new Thread(req,"Making request: SeeUserPosts");
+        reqthread.start();
+
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_comment);
+        setContentView(R.layout.activity_user_post);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         Intent intent = getIntent();
-        final String postid =  intent.getStringExtra(PostAdapter.EXTRA_MESSAGE1);
-        final String aname =  intent.getStringExtra(PostAdapter.PREV_ACT);
+        final String uid =  intent.getStringExtra(SearchActivity.EXTRA_MESSAGE2);
 
-        mactivity = this;
+        hactivity = this;
+        lastuid = uid;
+        getUserPosts(uid);
 
-        final EditText commentText = (EditText) findViewById(R.id.comment_text);
-        Button commentButton = (Button) findViewById(R.id.comment_button);
-        commentButton.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View view) {
-                if(!commentText.getText().toString().equals("")){
-                    MakeRequest req = new MakeRequest("NewComment",commentText.getText().toString(),postid,aname,mactivity);
-                    Thread reqthread = new Thread(req,"Making request: NewComment");
-                    reqthread.start();
-                }
-                else{
-                    raiseAToast(mactivity,"Please enter text");
-                }
-            }
-        });
     }
 
-    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_home, menu);
@@ -85,4 +74,5 @@ public class AddCommentActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
 }

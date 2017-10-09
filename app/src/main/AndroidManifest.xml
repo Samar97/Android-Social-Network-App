@@ -39,6 +39,10 @@
         android:name=".AddCommentActivity"
         android:label="@string/title_activity_add_comment"
         android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
+            android:name=".UserPostActivity"
+            android:label="@string/title_activity_user_post"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>
